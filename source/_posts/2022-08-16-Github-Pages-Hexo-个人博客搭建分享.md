@@ -92,7 +92,7 @@ npm install
 
 安装完成后，可以看到目录结构如下图
 
-![目录结构](./2022-08-16-Github-Pages-Hexo-个人博客搭建分享/目录结构.jpg)
+![目录结构]()
 
 执行以下 hexo 的命令，即可在本地生成静态网页文件并运行
 
@@ -148,5 +148,89 @@ npm install hexo-theme-aurora --save
 cp -rf ./node_modules/hexo-theme-aurora/_config.yml ./_config.aurora.yml
 ```
 
-3. 设置*permalink*
+3. 设置 *permalink*
 
+因为使用了 Vue-router，Hexo 默认生成的页面和文章的 permalink 与我们 Vue router 中的 path 是不相符的，那么就会出现无法访问的问题。所以我们需要修改 Hexo 默认配置文件里面的 `permalink` 参数。
+
+
+
+* 打开 Hexo 根目录下的 `_config.yml`
+
+* 修改 *permalink* 参数为  `/post/:title.html`
+
+  ```yaml
+  url: https://tridiamond.tech
+  permalink: /post/:title.html #更改这个参数
+  permalink_defaults:
+  pretty_urls:
+    trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
+    trailing_html: true # Set to false to remove trailing '.html' from permalinks
+  ```
+
+* 设置代码高亮
+
+最后主题是使用 `Prismjs` 来实现代码高亮显示，但 Hexo 默认是使用 `highlightjs`，因此你需要更改 Hexo 配置来使用 `Prismjs`
+
+1. 把 `highlight` 的启用改为`false`
+
+2. 把 `prismjs` 的启用改为`true`
+
+3. 把 `prismjs` 下的 `preprocess` 改为 `false`
+
+```yaml
+highlight:
+  enable: false #第一步
+  line_number: true
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false
+prismjs:
+  enable: true #第二部
+  preprocess: true #第三部
+  line_number: true
+  tab_replace: ''
+```
+
+#### 2.3 创建 "About" 页面
+
+主题默认开启了 `about` 页面，所以我们需要创建这个 about 页，要不主题就无法正常显示 about 页。
+
+要创建这个默认的 about 页，文档里面写的那个命令执行不了，不知道是不是版本问题，执行下面这个 `Hexo 的命令`：
+
+```bash
+hexo create page about #主题文档写的这个我执行不了，提示无此命令
+
+hexo new page about #执行这个，新建页面布局about
+```
+
+执行完毕后，你会发现在 `source/` 文件中多处了一个新的文件夹：
+
+```bash
+.
+└── source
+    └── about
+        └── index.md
+```
+
+你可以随意修改这个 `index.md` markdown 文件中的内容，此文件的内容将会现在在我们的 about 页面中。
+
+
+
++ **由于无法执行文档中 create page 的命令，因此还需要多加一步，否则跳转到 About 页面后点击刷新，是会出现访问404的情况(new pages是hexo的命令，上面的命令估计是作者封装的，那几个默认页面的原理应该也是读取的type参数)**
+
+找到 `_source/about/index.md`，在文件头上面增加一个`type`参数，表示它是一个跳转页面，这样就不会出现刷新404的情况了。
+
+```markdown
+---
+title: 关于
+date: 2022-08-15 18:28:35
+type: about #增加这个参数
+---
+```
+
+不增加的效果:
+
+
+
+增加后的效果:
