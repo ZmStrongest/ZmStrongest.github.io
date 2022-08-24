@@ -78,6 +78,12 @@ hexo -version
 npm install hexo-deployer-git --save
  ```
 
+**安装 hexo-asset-image 插件，如果不安装此插件，文章引入的图片将无法正常显示**
+
+```sh
+npm install hexo-asset-image --save
+```
+
 初始化 hexo 项目，后面上传的文件夹就是初始化后的目录
 
 ```shell
