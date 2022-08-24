@@ -92,7 +92,7 @@ npm install
 
 安装完成后，可以看到目录结构如下图
 
-![目录结构]()
+<img src="./2022-08-16-Github-Pages-Hexo-个人博客搭建分享/目录结构.jpg" alt="目录结构" style="zoom:50%;" />
 
 执行以下 hexo 的命令，即可在本地生成静态网页文件并运行
 
@@ -192,6 +192,15 @@ prismjs:
   tab_replace: ''
 ```
 
+* `_config.yaml` 修改主题配置
+
+```yaml
+# Extensions
+## Plugins: https://hexo.io/plugins/
+## Themes: https://hexo.io/themes/
+theme: Aurora #改成 Aurora 主题
+```
+
 #### 2.3 创建 "About" 页面
 
 主题默认开启了 `about` 页面，所以我们需要创建这个 about 页，要不主题就无法正常显示 about 页。
@@ -231,6 +240,243 @@ type: about #增加这个参数
 
 不增加的效果:
 
-
+<img src="./2022-08-16-Github-Pages-Hexo-个人博客搭建分享/about错误页面.jpg" alt="不加参数" style="zoom:50%;" />
 
 增加后的效果:
+
+<img src="./2022-08-16-Github-Pages-Hexo-个人博客搭建分享/about正确页面.jpg" alt="加参数" style="zoom:50%;" />
+
+
+
+#### 2.4 重新生成与本地服务器
+
+**使用以下命令来运行本地环境,改变了任何配置都需要重新生成 Hexo 的静态文件！** 
+
+``` sh
+hexo clean & hexo g & hexo s
+```
+
+当文件都生成完毕之后，就可以通过 [https://localhost:4000](https://localhost:4000/) 访问你的博客了。
+
+---
+
+### 3. Github Page 部署配置
+
+#### 3.1 配置文件
+
+一共有两个配置文件，一个是 **Hexo 自身**的配置，一个是**主题专用**的配置。
+
+```bash
+. # Hexo 项目根目录.
+├─ _config.yml # Hexo 配置文件.
+└─ _config.aurora.yml # 主题配置.
+```
+
+> 注意
+>
+> 大部分主题的功能都是使用主题配置文件的，但是有部分需要用到 Hexo 插件的就需要在 Hexo 的配置中修改。
+
+#### 3.2 基础配置
+
+我们可以使用 主题文件`_config.aurora.yml`中的`site`参数来设置我们博客的主要信息和配置。
+
+`site` 配置拥有以下选项：
+
+|       选项       |  接受类型   | 使用说明                                                     |
+| :--------------: | :---------: | ------------------------------------------------------------ |
+|    `subtitle`    |   String    | 博客自标题，页面主标题后面会跟随这个标题内容。               |
+|     `author`     |   String    | 博客作者名字，或者是博客名字。会在 **header 的 logo 区域**显示，也会在**博客简介**中显示。 |
+|      `nick`      |   String    | 博客子名字，会在 header 的 logo 下方显示。                   |
+|  `description`   |   String    | 会在博客简介中显示，用几句话描述博主相关信息（支持 HTML 标签） |
+|    `language`    |   en, cn    | 配置默认博客语言，en 是英文，cn 是中文。                     |
+| `multi_language` | true, false | 开启博客的多语言支持                                         |
+|      `logo`      |   String    | Logo 的图片链接 image.                                       |
+|     `avatar`     |   String    | 头像的图片链接 image.                                        |
+|     `beian`      |   Object    | 网站备案信息 (从版本 1.1.0 开始，这个配置拥有两个属性)       |
+
+```yaml
+site:
+  subtitle: Mins's Blog 
+  author: Mins #此参数将显示在左上角的logo
+  nick: blog	#此参数将显示在左上角的logo
+  avatar: /image/avatar.jpeg	#显示头像
+  link: https://zmstrongest.github.io #博客首页地址
+  description: 'Think like an artist, code like an artisan.' #显示在头像下方的个人简介
+  language: cn 
+  multi_language: true
+  logo: https://img-blog.csdnimg.cn/20210313122054101.png
+  #avatar: https://img-blog.csdnimg.cn/20210313122054101.png
+  beian:
+    number: ''
+    link: ''
+  police_beian:
+    number: ''
+    link: ''
+```
+
+#### 3.3 社交配置
+
+这部分用于配置我们的社交链接，这些链接会在我们的简介中显示。
+
+社交配置会有以下配置项：
+
+|     配置项      | 说明                      |
+| :-------------: | :------------------------ |
+|    `github`     | Github 简介页链接.        |
+|    `twitter`    | Twitter 个人页链接.       |
+| `stackoverflow` | Stackoverflow 个人页链接. |
+|     `weibo`     | 微博个人页链接.           |
+|     `zhihu`     | 知乎简介页链接.           |
+|     `csdn`      | CSDN 简介页链接.          |
+|    `juejin`     | 掘金简介页链接.           |
+
+配置例子：
+
+```yaml
+socials:
+  github: https://zmstrongest.github.io
+```
+
+如果上面作者提供的自带博客类型不能满足你的需求，想自定义图标和连接，请自行查看 [Aurora 的文档]( https://aurora.tridiamond.tech/zh/guide/)进行配置
+
+
+
+#### 3.4 评论区配置
+
+* Github OAuth Application 申请
+
+到 https://github.com/settings/applications/new 注册一个OAuth Application，后面的 Gitalk 配置需要用到，Application name 可自定义填写，Homepage URL 填写博客主页地址，Authorization callback URL 填写博客主页地址。
+
+<img src="./2022-08-16-Github-Pages-Hexo-个人博客搭建分享/OAuth.jpg" alt="配置界面" style="zoom:50%;" />
+
+
+
+提交后会自动生成一个 `ClientID`和`Client Secret`，用于后续的评论区配置
+
+---
+
+
+
+这个主题目前支持两个不同的评论插件。您可以使用`enable`配置来打开以下一款评论插件。
+
+> 提示
+>
+> 如果你同时打开了两个插件，**Gitalk**将会优先被使用。博主用的是Gitalk
+
+* Gitalk
+
+配置属性：
+
+|         属性          | 描述                                                         |
+| :-------------------: | :----------------------------------------------------------- |
+|       `enable`        | 使用**true**开启, 使用**false**关闭                          |
+|     `autoExpand`      | 如果设置为**true**, Github 评论将会自动展开。否者默认会收起。 |
+|      `clientID`       | **clientID** 是你 GitHub 的 Oauth APP 中提供的。             |
+|    `clientSecret`     | **clientSecret** 是你 GitHub 的 Oauth APP 中提供的。         |
+|        `repo`         | 仓库名, 比如: https://github.com/auroral-ui/**hexo-theme-aurora-docs**, 名字就是 `hexo-theme-Aurora-docs` |
+|        `owner`        | 仓库拥有者的用户名. 比如: `auroral-ui`                       |
+|        `admin`        | 仓库管理员的用户名，这里可以填写多个管理员。(也用于标记那个评论是博主的) |
+|         `id`          | **确保唯一性和长度小于 50**，如果您使用`pathname`，请确保长度小于 50 个字符或使用`uid`代替，这个有更好的兼容性 (如果您之前使用其他主题，谁用 uid 将可能无法显示您之前的评论) |
+|      `language`       | 使用 `en `设置为英文，使用 `cn` 设置为中文.                  |
+| `distractionFreeMode` | 与 Facebook 一样的专注模式，点击评论输入框时会让背景变暗。`true` 来开启 `false` 来关闭 |
+|    `recentComment`    | 是否开启最近评论功能。                                       |
+|        `proxy`        | GitHub 授权请求的反向代理                                    |
+
+> 注意
+>
+> 如果你在使用 Gitalk 的时候，出现 403 或者 422 这种报错的话，请根据[这里的教程在新窗口打开](https://mjava.top/archive/33f09b03-a5a7-4d66-93d3-7063905f9b81/)，自己搭建一个反向代理服务，然后把你建立好的方向代理地址配置给 `proxy` 即可。
+
+例子：
+
+```yaml
+gitalk:
+  enable: true
+  autoExpand: false
+  clientID: '' #你在Github申请的ID
+  clientSecret: '' #你在Github申请的Secret
+  repo: '' #博客仓库的名称
+  owner: 'ZmStrongest' #Github用户名
+  admin: ['ZmStrongest'] #Github用户名
+  id: uid
+  language: cn
+  distractionFreeMode: true
+  recentComment: true
+  #proxy: ''
+```
+
+更多的使用指南请查看 [Gitalk](https://github.com/gitalk/gitalk/blob/master/readme-cn.md) 插件的官网。
+
+配置完成后，在博客评论区里面登录自己的 `github` 账号，进行评论区初始化即可使用，由于`github`站点可能访问较慢，可能要梯子先登录初始化一下才可以使用，博主没用梯子一直都是连接超时，初始化以后就不再需要了。
+
+#### 3.5 机器人配置
+
+配置例子直接可以直接复制 [Aurora 的文档]( https://aurora.tridiamond.tech/zh/guide/) 进行配置
+
+#### 3.6 Github 部署配置
+
+上面讲完了主题的配置文件，现在还需要对 Hexo 的原始配置文件 `_config.yml` 进行配置修改
+
+* 配置好`github`的`ssh`以后，复制博客在`github`的仓库地址，并且根据自身情况创建存储博客静态网页内容的分支进行部署提交
+
+```yaml
+# Deployment
+## Docs: https://hexo.io/docs/one-command-deployment
+deploy:
+  type: git
+  repo: ''  #github仓库地址
+  branch: master #分支名称
+```
+
+* 配置完成后，可以即可通过`hexo`命令部署到`Github Pages`上
+
+```sh
+hexo deploy 
+#或者
+hexo d #简写
+```
+
+访问自己之前配置的博客主页地址即可生效，[博客地址](https://zmstrongest.github.io/) ，到这里 Github Pages + Hexo + Aurora 主题的配置就完成了，后续有自定义的需求可以自行参照 `Hexo`和`Aurora`的文档进行个性化设置。
+
+#### 3.7 文章编写
+
+配置完成后，即可开始记录自己的文章了
+
+你可以执行下列命令来创建一篇新文章或者新的页面。
+
+```sh
+$ hexo new [layout] <title>
+```
+
+您可以在命令中指定文章的布局（layout），默认为 `post`，可以通过修改 `_config.yml` 中的 `default_layout` 参数来指定默认布局。布局（Layout）
+
+Hexo 有三种默认布局：`post`、`page` 和 `draft`。在创建这三种不同类型的文件时，它们将会被保存到不同的路径；而您自定义的其他布局和 `post` 相同，都将储存到 `source/_posts` 文件夹。
+
+| 布局    | 路径             |
+| :------ | :--------------- |
+| `post`  | `source/_posts`  |
+| `page`  | `source`         |
+| `draft` | `source/_drafts` |
+
+* 文件名称
+
+Hexo 默认以标题做为文件名称，但您可编辑 `new_post_name` 参数来改变默认的文件名称，举例来说，设为 `:year-:month-:day-:title.md` 可让您更方便的通过日期来管理文章。
+
+| 变量       | 描述                                |
+| :--------- | :---------------------------------- |
+| `:title`   | 标题（小写，空格将会被替换为短杠）  |
+| `:year`    | 建立的年份，比如， `2015`           |
+| `:month`   | 建立的月份（有前导零），比如， `04` |
+| `:i_month` | 建立的月份（无前导零），比如， `4`  |
+| `:day`     | 建立的日期（有前导零），比如， `07` |
+| `:i_day`   | 建立的日期（无前导零），比如， `7`  |
+
+* 草稿
+
+刚刚提到了 Hexo 的一种特殊布局：`draft`，这种布局在建立时会被保存到 `source/_drafts` 文件夹，您可通过 `publish` 命令将草稿移动到 `source/_posts` 文件夹，该命令的使用方式与 `new` 十分类似，您也可在命令中指定 `layout` 来指定布局。
+
+```
+$ hexo publish [layout] <title>
+```
+
+草稿默认不会显示在页面中，您可在执行时加上 `--draft` 参数，或是把 `render_drafts` 参数设为 `true` 来预览草稿。
+
